@@ -1,6 +1,6 @@
 /*
 	Caesar Cipher Decryption
-	Jia Sen Wu
+	Jia Sen Wu / jw3675
 	CS1124
 	Polytechnic University
 */

@@ -18,12 +18,13 @@ int charDecrypt( int num, char ch ) {
 	}
 	else if( ch <= 101 && ch >= 92 ) {
 		return static_cast<char>( ch - num + ALPHABET_SIZE );
+	}
 	else {
 		return ch;
 	}
 }
 
-int lineDecrypt( int num, string decrypt ) {
+string lineDecrypt( int num, string decrypt ) {
 	string finals;
 	for( int i = 0; i < decrypt.size(); i++ ) {
 		finals += charDecrypt( num, decrypt[i] );
@@ -31,12 +32,12 @@ int lineDecrypt( int num, string decrypt ) {
 	return finals;
 }
 
-int fileToVec( istream& file ) {
+void fileToVec( istream& file ) {
 	string aString;
 	vector<string> lines;
 	
 	while( file >> aString ) {
-		vi.push_back( aString );
+		lines.push_back( aString );
 	return lines;
 }
 
@@ -51,7 +52,7 @@ int main() {
 		exit(1);
 	}
 	lines = fileToVec( caesar );
-	for( int i = files.size()-1; i >= 0; i-- ) {
+	for( int i = lines.size()-1; i >= 0; i-- ) {
 		decrypted += lineDecrypt( change, "test" ) + endl;
 	}
 	cout << decrypted;

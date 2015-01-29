@@ -1,6 +1,6 @@
 /*
 	rec01 - file reading
-	Jia Sen Wu
+	Jia Sen Wu / jw3675
 	CS1124
 	Polytechnic University
 */
@@ -21,8 +21,6 @@ int countWords( istream& file ) {
 }
 
 int main() {
-  string aString;
-  int count = 0;
   ifstream file( "test.txt" );
   if( !file ) {
     cerr << "Could not open the file." << endl;

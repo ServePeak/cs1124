@@ -35,15 +35,19 @@ string lineDecrypt( int num, string decrypt ) {
 }
 
 void fileDecrypt( istream& file, int num ) {
+  vector<string> lines;
     string line;
     getline( file, line );
     while( getline( file, line ) ) {
-      cout << lineDecrypt( num, line ) << endl;
+      lines.push_back( lineDecrypt( num, line ) );
+    }
+    for( int i = lines.size()-1; i >= 0; i-- ) {
+      cout << lines[i] << endl;
     }
 }
 
 int main() {
-        int change;	
+        int change;
 	ifstream caesar( "encrypted.txt" );
 	if( !caesar ) {
 		cerr << "Could not open the file." << endl;

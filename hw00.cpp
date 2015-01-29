@@ -15,6 +15,7 @@ using namespace std;
 const int ALPHABET_SIZE = 26;
 
 char charDecrypt( int num, char ch ) {
+	/* Changes a letter to a lower letter, by num amount. Returns the letter. */
 	if( ch > 101 && ch <= 122 ) {
 		return ch - num;
 	}
@@ -27,6 +28,7 @@ char charDecrypt( int num, char ch ) {
 }
 
 string lineDecrypt( int num, string decrypt ) {
+	/* Changes a line's letters, passing to charDecrypt. Returns the line. */
 	string finals;
 	for( int i = 0; i < decrypt.size(); i++ ) {
 		finals += charDecrypt( num, decrypt[i] );
@@ -35,19 +37,21 @@ string lineDecrypt( int num, string decrypt ) {
 }
 
 void fileDecrypt( istream& file, int num ) {
+	/* Change's a files letters, passing to fileDecrypt,
+and prints by last line first. */
   vector<string> lines;
-    string line;
-    getline( file, line );
-    while( getline( file, line ) ) {
-      lines.push_back( lineDecrypt( num, line ) );
-    }
-    for( int i = lines.size()-1; i >= 0; i-- ) {
-      cout << lines[i] << endl;
-    }
+	string line;
+	getline( file, line );
+	while( getline( file, line ) ) {
+		lines.push_back( lineDecrypt( num, line ) );
+	}
+	for( int i = lines.size()-1; i >= 0; i-- ) {
+		cout << lines[i] << endl;
+	}
 }
 
 int main() {
-        int change;
+	int change;
 	ifstream caesar( "encrypted.txt" );
 	if( !caesar ) {
 		cerr << "Could not open the file." << endl;

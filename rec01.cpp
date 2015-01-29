@@ -11,21 +11,32 @@
 #include <stdlib.h>
 using namespace std;
 
+void printFile( istream& file ) {
+	/* Prints a file's text onto the screen, line by line. */
+	string line;
+	while( getfile( file, line ) ) {
+		cout << line << endl;
+	}
+	file.clear();
+	file.seekg(0);
+}
+
 int countWords( istream& file ) {
-  string aString;
-  int count = 0;
-  while( file >> aString ) {
-    count++;
-  }
-  return count;
+	/* Counts the number of words in a file and returns that. */
+	string aString;
+	int count = 0;
+	while( file >> aString ) {
+		count++;
+	}
+	return count;
 }
 
 int main() {
-  ifstream file( "test.txt" );
-  if( !file ) {
-    cerr << "Could not open the file." << endl;
-    exit(1);
-  }
-  cout << countWords( file ) << endl;
-  file.close();
+	ifstream file( "test.txt" );
+	if( !file ) {
+		cerr << "Could not open the file." << endl;
+		exit(1);
+	}
+	cout << countWords( file ) << endl;
+	file.close();
 }

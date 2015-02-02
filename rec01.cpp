@@ -11,10 +11,10 @@
 #include <stdlib.h>
 using namespace std;
 
-void printFile( istream& file ) {
+void printFile( ifstream& file ) {
 	/* Prints a file's text onto the screen, line by line. */
 	string line;
-	while( getfile( file, line ) ) {
+	while( getline( file, line ) ) {
 		cout << line << endl;
 	}
 	file.clear();
@@ -37,6 +37,7 @@ int main() {
 		cerr << "Could not open the file." << endl;
 		exit(1);
 	}
+	printFile( file );
 	cout << countWords( file ) << endl;
 	file.close();
 }

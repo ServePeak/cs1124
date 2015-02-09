@@ -13,16 +13,44 @@
 #include <stdlib.h>
 using namespace std;
 
-struct Warrior {
+class Weapon {
+public:
+  Weapon( const string& theName, const int& theStr ) : name( theName ), strength( theStr) {
+ } 
+
   string name;
   int strength;
 };
 
+class Warrior {
+public: 
+  Warrior( const string& warName, const string& wepName, const int& wepStr ) : name( warName ), wepn( wepName, wepStr ) {
+  }
+  string getName() const {
+    return name;
+  }
+  string getWepName() const {
+    return wepn.name;
+  }
+  int getWepStr() const {
+    return wepn.strength;
+  }
+  void setWepStr( const int& strength ) {
+    wepn.strength = strength;
+  }
+
+private:
+  string name;
+  Weapon wepn;
+};
+
 void addWarrior( vector<Warrior>& fighters, istringstream& sline ) {
   /* Adds a warrior to a given vector */
-  Warrior man;
-  sline >> man.name;
-  sline >> man.strength;
+  string name;
+  string wname;
+  int wstr;
+  sline >> name >> wname >> wstr;
+  Warrior man( name, wname, wstr );
   fighters.push_back( man );
 }
 
@@ -30,7 +58,7 @@ void printStatus( const vector<Warrior> fighters, ostream& out ) {
   /* Prints the number of warriors, and status of each */
   out << "There are: " << fighters.size() << " warriors" << endl;
   for( const Warrior war : fighters ) { 
-    out << "Warrior: " << war.name << ", " << "strength: " << war.strength << endl;
+    out << "Warrior: " << war.getName() << ", " << "weapon: " << war.getWepName() << ", " << war.getWepStr() << endl;
   }
 }
 
@@ -41,46 +69,47 @@ void toBattle( vector<Warrior>& fighters, istringstream& sline, ostream& out ) {
   string word;
   sline >> word;
   for( size_t i = 0; i < fighters.size(); i++ ) { 
-    if( fighters[i].name == word ) {
+    if( fighters[i].getName() == word ) {
       fFi = i;
     }
   }
   sline >> word;
   for( size_t i = 0; i < fighters.size(); i++ ) { 
-    if( fighters[i].name == word ) {
+    if( fighters[i].getName() == word ) {
       sFi = i;
     }
   }
-  out << fighters[fFi].name << " battles " << fighters[sFi].name << endl;
+  out << fighters[fFi].getName() << " battles " << fighters[sFi].getName() << endl;
 
   // When both fighters have 0 strength
-  if( fighters[fFi].strength == 0 && fighters[sFi].strength == 0 ) {
+  if( fighters[fFi].getWepStr() == 0 && fighters[sFi].getWepStr() == 0 ) {
     out << "Oh, NO! They're both dead! Yuck!" << endl;
   }
   // When both fighters have equal strength
-  else if( fighters[fFi].strength == fighters[sFi].strength ) {
-    fighters[fFi].strength = fighters[sFi].strength = 0;
-    out << "Mutual Annihilations: " << fighters[fFi].name << " and " << fighters[sFi].name << " die at each other's hands" << endl;
+  else if( fighters[fFi].getWepStr() == fighters[sFi].getWepStr() ) {
+    fighters[fFi].setWepStr(0);
+    fighters[sFi].setWepStr(0);
+    out << "Mutual Annihilations: " << fighters[fFi].getName() << " and " << fighters[sFi].getName() << " die at each other's hands" << endl;
   }
   // When first fighters has 0 strength
-  else if( fighters[fFi].strength == 0 ) {
-    out << "He's dead, " << fighters[sFi].name << endl;
+  else if( fighters[fFi].getWepStr() == 0 ) {
+    out << "He's dead, " << fighters[sFi].getName() << endl;
   }
   // When second fighter has 0 strength
-  else if( fighters[sFi].strength == 0 ) {
-    out << "He's dead, " << fighters[fFi].name << endl;
+  else if( fighters[sFi].getWepStr() == 0 ) {
+    out << "He's dead, " << fighters[fFi].getName() << endl;
   }
   // When first fighter has more strength than the second fighter
-  else if( fighters[fFi].strength > fighters[sFi].strength ) {
-    fighters[fFi].strength -= fighters[sFi].strength;
-    fighters[sFi].strength = 0;
-    out << fighters[fFi].name << " defeats " << fighters[sFi].name << endl;
+  else if( fighters[fFi].getWepStr() > fighters[sFi].getWepStr() ) {
+    fighters[fFi].setWepStr( fighters[sFi].getWepStr() );
+    fighters[sFi].setWepStr(0);
+    out << fighters[fFi].getName() << " defeats " << fighters[sFi].getName() << endl;
   }
   // When second fighter has more strength than the first fighter
-  else if( fighters[sFi].strength > fighters[fFi].strength ) {
-    fighters[sFi].strength -= fighters[fFi].strength;
-    fighters[fFi].strength = 0;
-    out << fighters[sFi].name << " defeats " << fighters[fFi].name << endl;
+  else if( fighters[sFi].getWepStr() > fighters[fFi].getWepStr() ) {
+    fighters[sFi].setWepStr( fighters[fFi].getWepStr() );
+    fighters[fFi].setWepStr(0);
+    out << fighters[sFi].getName() << " defeats " << fighters[fFi].getName() << endl;
   }
 }
 

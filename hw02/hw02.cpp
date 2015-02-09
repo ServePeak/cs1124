@@ -15,17 +15,14 @@ using namespace std;
 
 class Weapon {
 public:
-  Weapon( const string& theName, const int& theStr ) : name( theName ), strength( theStr) {
- } 
-
+  Weapon( const string& theName, const int& theStr ) : name( theName ), strength( theStr ) {} 
   string name;
   int strength;
 };
 
 class Warrior {
 public: 
-  Warrior( const string& warName, const string& wepName, const int& wepStr ) : name( warName ), wepn( wepName, wepStr ) {
-  }
+  Warrior( const string& warName, const string& wepName, const int& wepStr ) : name( warName ), wepn( wepName, wepStr ) {}
   string getName() const {
     return name;
   }

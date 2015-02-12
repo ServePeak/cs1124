@@ -42,7 +42,7 @@ private:
 };
 
 void addWarrior( vector<Warrior>& fighters, istringstream& sline ) {
-  /* Adds a warrior to a given vector */
+  /* Adds a warrior to a given vector from a stringstream */
   string name;
   string wname;
   int wstr;
@@ -52,10 +52,12 @@ void addWarrior( vector<Warrior>& fighters, istringstream& sline ) {
 }
 
 void printStatus( const vector<Warrior> fighters, ostream& out ) {
-  /* Prints the number of warriors, and status of each */
+  /* Prints the number of warriors, and status of each warrior */
   out << "There are: " << fighters.size() << " warriors" << endl;
   for( const Warrior war : fighters ) { 
+    // Ex: Warrior: Lorem, weapon: Ipsum, 32
     out << "Warrior: " << war.getName() << ", " << "weapon: " << war.getWepName() << ", " << war.getWepStr() << endl;
+    cout << "Warrior: " << war.getName() << ", " << "weapon: " << war.getWepName() << ", " << war.getWepStr() << endl;
   }
 }
 
@@ -65,6 +67,7 @@ void toBattle( vector<Warrior>& fighters, istringstream& sline, ostream& out ) {
   int sFi;
   string word;
   sline >> word;
+  // Finds fighter in vector and gets index
   for( size_t i = 0; i < fighters.size(); i++ ) { 
     if( fighters[i].getName() == word ) {
       fFi = i;
@@ -77,36 +80,43 @@ void toBattle( vector<Warrior>& fighters, istringstream& sline, ostream& out ) {
     }
   }
   out << fighters[fFi].getName() << " battles " << fighters[sFi].getName() << endl;
+  cout << fighters[fFi].getName() << " battles " << fighters[sFi].getName() << endl;
 
   // When both fighters have 0 strength
   if( fighters[fFi].getWepStr() == 0 && fighters[sFi].getWepStr() == 0 ) {
     out << "Oh, NO! They're both dead! Yuck!" << endl;
+    cout << "Oh, NO! They're both dead! Yuck!" << endl;
   }
   // When both fighters have equal strength
   else if( fighters[fFi].getWepStr() == fighters[sFi].getWepStr() ) {
     fighters[fFi].setWepStr(0);
     fighters[sFi].setWepStr(0);
     out << "Mutual Annihilations: " << fighters[fFi].getName() << " and " << fighters[sFi].getName() << " die at each other's hands" << endl;
+    cout << "Mutual Annihilations: " << fighters[fFi].getName() << " and " << fighters[sFi].getName() << " die at each other's hands" << endl;
   }
   // When first fighters has 0 strength
   else if( fighters[fFi].getWepStr() == 0 ) {
     out << "He's dead, " << fighters[sFi].getName() << endl;
+    cout << "He's dead, " << fighters[sFi].getName() << endl;
   }
   // When second fighter has 0 strength
   else if( fighters[sFi].getWepStr() == 0 ) {
     out << "He's dead, " << fighters[fFi].getName() << endl;
+    cout << "He's dead, " << fighters[fFi].getName() << endl;
   }
   // When first fighter has more strength than the second fighter
   else if( fighters[fFi].getWepStr() > fighters[sFi].getWepStr() ) {
     fighters[fFi].setWepStr( fighters[sFi].getWepStr() );
     fighters[sFi].setWepStr(0);
     out << fighters[fFi].getName() << " defeats " << fighters[sFi].getName() << endl;
+    cout << fighters[fFi].getName() << " defeats " << fighters[sFi].getName() << endl;
   }
   // When second fighter has more strength than the first fighter
   else if( fighters[sFi].getWepStr() > fighters[fFi].getWepStr() ) {
     fighters[sFi].setWepStr( fighters[fFi].getWepStr() );
     fighters[fFi].setWepStr(0);
     out << fighters[sFi].getName() << " defeats " << fighters[fFi].getName() << endl;
+    cout << fighters[sFi].getName() << " defeats " << fighters[fFi].getName() << endl;
   }
 }
 

@@ -16,5 +16,5 @@ There are: 5 warriors
 Warrior: Jim, weapon: Glamdring, 42
 Warrior: Lancelot, weapon: Naegling, 0
 Warrior: Arthur, weapon: Excalibur, 0
-Warrior: Torvalds, weapon: Narsil, 8
+Warrior: Torvalds, weapon: Narsil, 12
 Warrior: Gates, weapon: Orcrist, 0

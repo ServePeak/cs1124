@@ -35,51 +35,53 @@ public:
   void setWepStr( const int& strength ) {
     wepn.strength = strength;
   }
-  void battle( Warrior& enemy, ostream& out ) {
-    out << getName() << " battles " << enemy.getName() << endl;
-    cout << getName() << " battles " << enemy.getName() << endl;
-    
-    // When both fighters have 0 strength
-    if( getWepStr() == 0 && enemy.getWepStr() == 0 ) {
-      out << "Oh, NO! They're both dead! Yuck!" << endl;
-      cout << "Oh, NO! They're both dead! Yuck!" << endl;
-    }
-    // When both fighters have equal strength
-    else if( getWepStr() == enemy.getWepStr() ) {
-      setWepStr(0);
-      enemy.setWepStr(0);
-      out << "Mutual Annihilations: " << getName() << " and " << enemy.getName() << " die at each other's hands" << endl;
-      cout << "Mutual Annihilations: " << getName() << " and " << enemy.getName() << " die at each other's hands" << endl;
-    }
-    // When first fighter has 0 strength
-    else if( getWepStr() == 0 ) {
-      out << "He's dead, " << enemy.getName() << endl;
-      cout << "He's dead, " << enemy.getName() << endl;
-    }
-    // When second fighter has 0 strength
-    else if( enemy.getWepStr() == 0 ) {
-      out << "He's dead, " << getName() << endl;
-      cout << "He's dead, " << getName() << endl;
-    }
-    // When first fighter has more strength than the second fighter
-    else if( getWepStr() > enemy.getWepStr() ) {
-      setWepStr( getWepStr() - enemy.getWepStr() );
-      enemy.setWepStr(0);
-      out << getName() << " defeats " << enemy.getName() << endl;
-      cout << getName() << " defeats " << enemy.getName() << endl;
-    }
-    // When second fighter has more strength than the first fighter
-    else if( enemy.getWepStr() > getWepStr() ) {
-      enemy.setWepStr( enemy.getWepStr() - getWepStr() );
-      setWepStr(0);
-      out << enemy.getName() << " defeats " << getName() << endl;
-      cout << enemy.getName() << " defeats " << getName() << endl;
-    }
-  }
+  void battle( Warrior& enemy, ostream& out );
 private:
   string name;
   Weapon wepn;
 };
+
+void Warrior::battle( Warrior& enemy, ostream& out ) {
+  out << getName() << " battles " << enemy.getName() << endl;
+  cout << getName() << " battles " << enemy.getName() << endl;
+  
+  // When both fighters have 0 strength
+  if( getWepStr() == 0 && enemy.getWepStr() == 0 ) {
+    out << "Oh, NO! They're both dead! Yuck!" << endl;
+    cout << "Oh, NO! They're both dead! Yuck!" << endl;
+  }
+  // When both fighters have equal strength
+  else if( getWepStr() == enemy.getWepStr() ) {
+    setWepStr(0);
+    enemy.setWepStr(0);
+    out << "Mutual Annihilations: " << getName() << " and " << enemy.getName() << " die at each other's hands" << endl;
+    cout << "Mutual Annihilations: " << getName() << " and " << enemy.getName() << " die at each other's hands" << endl;
+  }
+  // When first fighter has 0 strength
+  else if( getWepStr() == 0 ) {
+    out << "He's dead, " << enemy.getName() << endl;
+    cout << "He's dead, " << enemy.getName() << endl;
+  }
+  // When second fighter has 0 strength
+  else if( enemy.getWepStr() == 0 ) {
+    out << "He's dead, " << getName() << endl;
+    cout << "He's dead, " << getName() << endl;
+  }
+  // When first fighter has more strength than the second fighter
+  else if( getWepStr() > enemy.getWepStr() ) {
+    setWepStr( getWepStr() - enemy.getWepStr() );
+    enemy.setWepStr(0);
+    out << getName() << " defeats " << enemy.getName() << endl;
+    cout << getName() << " defeats " << enemy.getName() << endl;
+  }
+  // When second fighter has more strength than the first fighter
+  else if( enemy.getWepStr() > getWepStr() ) {
+    enemy.setWepStr( enemy.getWepStr() - getWepStr() );
+    setWepStr(0);
+    out << enemy.getName() << " defeats " << getName() << endl;
+    cout << enemy.getName() << " defeats " << getName() << endl;
+  }
+}
 
 void addWarrior( vector<Warrior>& fighters, istringstream& sline ) {
   /* Adds a warrior to a given vector from a stringstream */

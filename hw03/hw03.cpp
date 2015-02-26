@@ -46,8 +46,7 @@ public:
   void fire( Warrior& warrior ) {
     for( size_t i = 0; i < warriors.size(); i++ ) {
       if( warriors[i]->getName() == warrior.getName() ) {
-	warriors[i] = NULL;
-	warriors.erase(i);
+	warriors.erase(warriors.begin()+i);
       }
     }
   }

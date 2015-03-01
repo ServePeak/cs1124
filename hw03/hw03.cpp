@@ -22,13 +22,12 @@ public:
   int getStr() const {
     return strength;
   }
-  void setStr( const int& strength ) {
+  void setStr( int strength ) {
     this->strength = strength;
   }
-  void battle( Warrior& enemy, ostream& out );
 private:
   string name;
-  int strength;
+  double strength;
 };
 
 class Noble {
@@ -36,6 +35,9 @@ public:
   Noble( const string& nobName ) : name( nobName ) {}
   void hire( Warrior& warrior ) {
     warriors.push_back( &warrior );
+  }
+  string getName() const {
+    return name;
   }
   void display() {
     cout << name << " has an army of " << warriors.size() << endl;
@@ -50,49 +52,74 @@ public:
       }
     }
   }
+  void battle( Noble& enemy );
 private:
   string name;
   vector<Warrior*> warriors;
 };
 
-void Warrior::battle( Warrior& enemy, ostream& out ) {
-  out << getName() << " battles " << enemy.getName() << endl;
+void Noble::battle( Noble& enemy ) {
   cout << getName() << " battles " << enemy.getName() << endl;
-  
-  // When both fighters have 0 strength
-  if( getStr() == 0 && enemy.getStr() == 0 ) {
-    out << "Oh, NO! They're both dead! Yuck!" << endl;
+  double strength = 0;
+  double enStr = 0;
+  double ratio;
+
+  for( size_t i = 0; i < warriors.size(); i++ ) {
+    strength += warriors[i]->getStr();
+  }
+  for( size_t i = 0; i < enemy.warriors.size(); i++ ) {
+    enStr += enemy.warriors[i]-> getStr();
+  }
+  if( strength > enStr ) {
+    ratio = strength / enStr;
+  }
+  else if( enStr > strength ) {
+    ratio = enStr / strength;
+  }
+  //cout << strength << endl;
+  //cout << enStr << endl;
+  //cout << ratio << endl;
+
+  // When both nobles have 0 strength
+  if( strength == 0 && enStr == 0 ) {
     cout << "Oh, NO! They're both dead! Yuck!" << endl;
   }
-  // When both fighters have equal strength
-  else if( getStr() == enemy.getStr() ) {
-    setStr(0);
-    enemy.setStr(0);
-    out << "Mutual Annihilations: " << getName() << " and " << enemy.getName() << " die at each other's hands" << endl;
-    cout << "Mutual Annihilations: " << getName() << " and " << enemy.getName() << " die at each other's hands" << endl;
+  // When both nobles have equal strength
+  else if( strength == enStr ) {
+    for( size_t i = 0; i < warriors.size(); i++ ) {
+      warriors[i]->setStr(0);
+    }
+    for( size_t i = 0; i < enemy.warriors.size(); i++ ) {
+      enemy.warriors[i]->setStr(0);
+    }
+    cout << "Mutual Annihalation: " << getName() << " and " << enemy.getName() << " die at each other's hands" << endl; 
   }
-  // When first fighter has 0 strength
-  else if( getStr() == 0 ) {
-    out << "He's dead, " << enemy.getName() << endl;
+  // When first noble has 0 strength
+  else if( strength == 0 ) {
     cout << "He's dead, " << enemy.getName() << endl;
   }
-  // When second fighter has 0 strength
-  else if( enemy.getStr() == 0 ) {
-    out << "He's dead, " << getName() << endl;
+  // When second noble has 0 strength
+  else if( enStr == 0 ) {
     cout << "He's dead, " << getName() << endl;
   }
-  // When first fighter has more strength than the second fighter
-  else if( getStr() > enemy.getStr() ) {
-    setStr( getStr() - enemy.getStr() );
-    enemy.setStr(0);
-    out << getName() << " defeats " << enemy.getName() << endl;
+  // When first noble has more strength than the second fighter
+  else if( strength > enStr ) {
+    for( size_t i = 0; i < warriors.size(); i++ ) {
+      warriors[i]->setStr( warriors[i]->getStr() * ratio );
+    }
+    for( size_t i = 0; i < enemy.warriors.size(); i++ ) {
+      enemy.warriors[i]->setStr(0);
+    }
     cout << getName() << " defeats " << enemy.getName() << endl;
   }
-  // When second fighter has more strength than the first fighter
-  else if( enemy.getStr() > getStr() ) {
-    enemy.setStr( enemy.getStr() - getStr() );
-    setStr(0);
-    out << enemy.getName() << " defeats " << getName() << endl;
+  // When second noble has more strength than the first fighter
+  else if( enStr > strength ) {
+    for( size_t i = 0; i < enemy.warriors.size(); i++ ) {
+      enemy.warriors[i]->setStr( enemy.warriors[i]->getStr() * ratio );
+    }
+    for( size_t i = 0; i < warriors.size(); i++ ) {
+      warriors[i]->setStr(0);
+    }
     cout << enemy.getName() << " defeats " << getName() << endl;
   }
 }
@@ -114,12 +141,11 @@ int main() {
   
   jim.hire(nimoy);
   lance.hire(theGovernator);
-  //art.hire(wizard);
+  art.hire(wizard);
   lance.hire(dylan);
   linus.hire(lawless);
   billie.hire(mrGreen);
   art.hire(cheetah);
-  art.hire(wizard);
   
   jim.display();
   lance.display();
@@ -129,9 +155,9 @@ int main() {
   
   art.fire(cheetah);
   art.display();
-  /*
+  
   art.battle(lance);
   jim.battle(lance);
   linus.battle(billie);
-  billie.battle(lance);*/
+  billie.battle(lance);
 }

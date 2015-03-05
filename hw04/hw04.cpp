@@ -47,6 +47,7 @@ public:
       os << '\t' << war->getName() << ": " << war->getStr() << endl;
     }
   }
+  // Finds warrior, takes him out of nobles vector, then returns warrior
   Warrior* fire( string warrior ) {
     Warrior* guy;
     for( size_t i = 0; i < warriors.size(); i++ ) {
@@ -63,6 +64,13 @@ public:
     }
     return guy;
   }
+  void clear() {
+    for( size_t i = 0; i < warriors.size(); i++ ) {
+      delete warriors[i];
+      warriors[i] = NULL;
+    }
+    warriors.clear();
+  }
   void battle( Noble& enemy );
 private:
   string name;
@@ -75,6 +83,8 @@ void Noble::battle( Noble& enemy ) {
   double enStr = 0;
   double ratio;
 
+
+  // Gets strength of both warriors, then gets ratio depending on who's stronger
   for( size_t i = 0; i < warriors.size(); i++ ) {
     strength += warriors[i]->getStr();
   }
@@ -82,10 +92,10 @@ void Noble::battle( Noble& enemy ) {
     enStr += enemy.warriors[i]-> getStr();
   }
   if( strength > enStr ) {
-    ratio = strength / enStr;
+    ratio = enStr / strength;
   }
   else if( enStr > strength ) {
-    ratio = enStr / strength;
+    ratio = strength / enStr;
   }
   //cout << strength << endl;
   //cout << enStr << endl;
@@ -137,43 +147,64 @@ void Noble::battle( Noble& enemy ) {
 
 void addNoble( vector<Noble*>& nobles, ifstream& file ) {
   string name;
+  bool exists = false;
   file >> name;
+  for( size_t i = 0; i < nobles.size(); i++ ) {
+    if( nobles[i]->getName() == name ) {
+      exists = true;
+    }
+  }
+  if( exists ) {
+    cout << "Noble already exists" << endl;
+  } else {
   Noble* someNoble = new Noble( name );
   nobles.push_back( someNoble );
-  //for( size_t i = 0; i < nobles.size(); i++ ) {
-  //  cout << nobles[i]->getName() << endl;
-  //}
+  }
 }
 
 void addWarrior( vector<Warrior*>& warriors, ifstream& file ) {
   string name;
   int strength;
+  bool exists = false;
   file >> name >> strength;
+  for( size_t i = 0; i < warriors.size(); i++ ) {
+    if( warriors[i]->getName() == name ) {
+      exists = true;
+    }
+  }
+  if( exists ) {
+    cout << "Warrior already exists" << endl;
+  } else {
   Warrior* someWarrior = new Warrior( name, strength );
   warriors.push_back( someWarrior );
-  //for( size_t i = 0; i < warriors.size(); i++ ) {
-  //  cout << warriors[i]->getName() << ' ' << warriors[i]->getStr() << endl;
-  //}
+  }
 }
 
 void hireWarrior( vector<Noble*>& nobles, vector<Warrior*>& warriors, ifstream& file ) {
   string noble, warrior;
+  bool exists = false;
   file >> noble >> warrior;
   for( size_t i = 0; i < warriors.size(); i++ ) {
+    // If the warrior is found, pushes to end of vector to pop_back
     if( i != warriors.size()-1 && warriors[i]->getName() == warrior ) {
       Warrior* temp(warriors[i]);
       warriors[i] = warriors[i+1];
       warriors[i+1] = temp;
       temp = NULL;
     }
+    // When warrior is at the end, he gets hired by noble and leaves the vector of unemployed warriors
     else if( warriors[i]->getName() == warrior ) {
       for( size_t j = 0; j < nobles.size(); j++ ) {
 	if( nobles[j]->getName() == noble ) {
 	  nobles[j]->hire( warriors[i] );
+	  exists = true;
 	}
       }
       warriors.pop_back();
     }
+  }
+  if( !exists ) {
+    cout << "Warrior has already been hired" << endl;
   }
 }
 
@@ -189,13 +220,55 @@ void fireWarrior( vector<Noble*>& nobles, vector<Warrior*>& warriors, ifstream& 
 
 void showStatus( vector<Noble*> nobles, vector<Warrior*> warriors ) {
   cout << "Status" << endl << "======" << endl << "Nobles" << endl;
-  for( size_t i = 0; i < nobles.size(); i++ ) {
-    nobles[i]->display();
+  // Check if there are any nobles in the first place
+  if( nobles.size() == 0 ) {
+    cout << "NONE" << endl;
+  } else {
+    for( size_t i = 0; i < nobles.size(); i++ ) {
+      nobles[i]->display();
+    }
   }
   cout << "Unemployed Warriors:" << endl;
-  for( size_t i = 0; i < warriors.size(); i++ ) {
-    warriors[i]->display();
+  // Check if there are any warriors in the first place
+  if( warriors.size() == 0 ) {
+    cout << "NONE" << endl;
+  } else {
+    for( size_t i = 0; i < warriors.size(); i++ ) {
+      warriors[i]->display();
+    }
   }
+}
+
+void toBattle( vector<Noble*> nobles, ifstream& file ) {
+  string fNoble, sNoble;
+  Noble* nblptr;
+  file >> fNoble >> sNoble;
+  // Gets second noble's pointer 
+  for( size_t i = 0; i < nobles.size(); i++ ) {
+    if( nobles[i]->getName() == sNoble ) {
+      nblptr = nobles[i];
+    }
+  }
+  // Uses second noble's pointer in first noble's battle function
+  for( size_t i = 0; i < nobles.size(); i++ ) {
+    if( nobles[i]->getName() == fNoble ) {
+      nobles[i]->battle( *nblptr );
+    }
+  }
+}
+
+// Clears heapspace by deleting noble and warrior, then setting to null before clearing
+void clearVecs( vector<Noble*>& nobles, vector<Warrior*>& warriors ) {
+  for( size_t i = 0; i < nobles.size(); i++ ) {
+    delete nobles[i];
+    nobles[i] = NULL;
+  }
+  nobles.clear();
+  for( size_t i = 0; i < warriors.size(); i++ ) {
+    delete warriors[i];
+    warriors[i] = NULL;
+  }
+  warriors.clear();
 }
 
 int main() {
@@ -224,6 +297,12 @@ int main() {
     }
     if( word == "Status" ) {
       showStatus( nobles, warriors );
+    }
+    if( word == "Battle" ) {
+      toBattle( nobles, file );
+    }
+    if( word == "Clear" ) {
+      clearVecs( nobles, warriors );
     }
   }
   file.close();

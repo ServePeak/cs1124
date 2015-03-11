@@ -44,9 +44,10 @@ private:
   bool dead;
 };
 
-class Magician : public Warrior {
+class Wizard : public Warrior {
 public:
-  Magician( const string& name, double str ) : Warrior( name, str ) {}
+  Wizard( const string& name, double str ) : Warrior( name, str ) {}
+  // It is such a hard job to control the strength expended with magic!
   void defend( const string& name ) const {
     cout << "POOF!" << endl;
   };
@@ -74,15 +75,18 @@ private:
 class Noble { 
 public:
   Noble( const string& nobName ) : name(nobName), dead(false) {}
-  Noble( const string& nobName, int str ) : name(nobName), strength(str), dead(false) {}
   virtual string getName() const {
     return name;
   }
   virtual bool isDead() const {
     return dead;
   }
+  virtual void flipDead() {
+    dead = !dead;
+  }
   virtual double getStr() const = 0;
   virtual void setStr( double ratio ) = 0;
+  virtual void doBattle(){}; // This is so that the warriors can say something
   virtual void battle( Noble& enemy );
 private:
   string name;
@@ -91,9 +95,12 @@ private:
 
 void Noble::battle( Noble& enemy ) {
   cout << getName() << " battles " << enemy.getName() << endl;
-  double strength = getStr();
-  double enStr = enemy.getStr();
+  Noble* const thyself = &enemy;
+  // Polymorphism
+  double strength = this->getStr();
+  double enStr = thyself->getStr();
   double ratio;
+  // cout << strength << ',' << enStr << endl;
 
   // Gets a ratio depending on stronger Noble
   if( strength > enStr ) {
@@ -103,47 +110,41 @@ void Noble::battle( Noble& enemy ) {
     ratio = strength / enStr;
   }
 
-  // When both nobles have 0 strength
-  if( strength == 0 && enStr == 0 ) {
-    os << "Oh, NO! They're both dead! Yuck!" << endl;
+  // When both nobles are dead
+  if( this->isDead() && thyself->isDead() ) {
+    cout << "Oh, NO! They're both dead! Yuck!" << endl;
   }
   // When both nobles have equal strength
   else if( strength == enStr ) {
-    for( size_t i = 0; i < warriors.size(); i++ ) {
-      warriors[i]->setStr(0);
-    }
-    for( size_t i = 0; i < enemy.warriors.size(); i++ ) {
-      enemy.warriors[i]->setStr(0);
-    }
-    os << "Mutual Annihalation: " << getName() << " and " << enemy.getName() << " die at each other's hands" << endl; 
+    this->setStr(0);
+    thyself->setStr(0);
+    this->doBattle();
+    thyself->doBattle();
+    cout << "Mutual Annihilation: " << this->getName() << " and " << thyself->getName() << " die at each other's hands" << endl; 
   }
-  // When first noble has 0 strength
-  else if( strength == 0 ) {
-    os << "He's dead, " << enemy.getName() << endl;
+  // When first noble is dead
+  else if( this->isDead() ) {
+    cout << "He's dead, " << thyself->getName() << endl;
   }
-  // When second noble has 0 strength
-  else if( enStr == 0 ) {
-    os << "He's dead, " << getName() << endl;
+  // When second noble is dead
+  else if( thyself->isDead() ) {
+    cout << "He's dead, " << this->getName() << endl;
   }
   // When first noble has more strength than the second fighter
   else if( strength > enStr ) {
-    for( size_t i = 0; i < warriors.size(); i++ ) {
-      warriors[i]->setStr( warriors[i]->getStr() * ratio );
-    }
-    for( size_t i = 0; i < enemy.warriors.size(); i++ ) {
-      enemy.warriors[i]->setStr(0);
-    }
-    os << getName() << " defeats " << enemy.getName() << endl;
+    this->setStr( this->getStr() * ratio );
+    thyself->setStr(0);
+    this->doBattle();
+    thyself->doBattle();
+    cout << this->getName() << " defeats " << thyself->getName() << endl;
   }
   // When second noble has more strength than the first fighter
   else if( enStr > strength ) {
-    for( size_t i = 0; i < enemy.warriors.size(); i++ ) {
-      enemy.warriors[i]->setStr( enemy.warriors[i]->getStr() * ratio );
-    }
-    for( size_t i = 0; i < warriors.size(); i++ ) {
-      warriors[i]->setStr(0);
-    }
-    os << enemy.getName() << " defeats " << getName() << endl;
+    this->setStr(0);
+    thyself->setStr( thyself->getStr() * ratio );
+    this->doBattle();
+    thyself->doBattle();
+    cout << thyself->getName() << " defeats " << this->getName() << endl;
   }
 }
 
@@ -154,7 +155,12 @@ public:
     return strength;
   }
   void setStr( double ratio ) {
-    strength *= ratio;
+    if( ratio == 0 ) {
+      flipDead();
+      strength = 0;
+    } else {
+      strength *= ratio;
+    }
   }
 private:
   int strength;
@@ -165,13 +171,13 @@ public:
   Lord( const string& name ) : Noble(name) {}
   void hires( Warrior& war ) {
     if( war.isHired() ) {
-      cerr << war.getName() << " is already hired." << endl;
+      //cerr << war.getName() << " is already hired." << endl;
     }
-    else if( Noble::getStr() == 0 ) {
-      cerr << Noble::getName() << " is dead." << endl;
+    else if( isDead() ) {
+      //cerr << getName() << " is dead and cannot hire " << war.getName() << '.' << endl;
     }
     else if( war.getStr() == 0 ) {
-      cerr << war.getName() << " is dead." << endl;
+      //cerr << war.getName() << " is dead." << endl;
     } else {
       war.flipHired();
       warriors.push_back( &war );
@@ -184,9 +190,25 @@ public:
     }
     return strength;
   }
+  // Man, this guy has a lot of work cut out for him
+  // Whatever he does, his fellow warriors must have to same happen
   void setStr( double ratio ) {
+    if( ratio == 0 ) {
+      flipDead();
+      for( size_t i = 0; i < warriors.size(); i++ ) {
+	warriors[i]->setStr(0);
+	warriors[i]->flipDead();
+      }
+    } else {
+      for( size_t i = 0; i < warriors.size(); i++ ) {
+	warriors[i]->setStr( warriors[i]->getStr() * ratio );
+      }
+    }
+  }
+  // Warriors, scream your battlecry!
+  void doBattle() {
     for( size_t i = 0; i < warriors.size(); i++ ) {
-      warriors[i]->setStr( warriors[i]->getStr() * ratio );
+      warriors[i]->defend( getName() );
     }
   }
 private:
@@ -194,7 +216,28 @@ private:
 };
 
 int main() {
-  Archer george( "George", 150 );
-  Lord sam( "Sam" );
-  sam.hires( george );
+  Lord sam("Sam");
+  Archer samantha("Samantha", 200);
+  sam.hires(samantha);
+  Lord joe("Joe");
+  PersonWithStrengthToFight randy("Randolf the Elder", 250); 	
+  joe.battle(randy);
+  joe.battle(sam);	
+  Lord janet("Janet");	
+  Swordsman hardy("TuckTuckTheHardy", 100);
+  Swordsman stout("TuckTuckTheStout", 80);
+  janet.hires(hardy);	
+  janet.hires(stout);	
+  PersonWithStrengthToFight barclay("Barclay the Bold", 300);	
+  janet.battle(barclay);	
+  janet.hires(samantha);	
+  Archer pethora("Pethora", 50);	
+  Archer thora("Thorapleth", 60);
+  Wizard merlin("Merlin", 150);
+  janet.hires(pethora);
+  janet.hires(thora);
+  sam.hires(merlin);
+  janet.battle(barclay);	
+  sam.battle(barclay);	
+  joe.battle(barclay);
 }

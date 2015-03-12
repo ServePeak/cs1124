@@ -58,7 +58,7 @@ class Archer : public Warrior {
 public:
   Archer( const string& name, double str ) : Warrior( name, str ) {}
   void defend( const string& name ) const {
-    cout << "TWANG! " << Warrior::getName() << " says: Take that in the name of my lord, " << name << endl;
+    cout << "TWANG! " << getName() << " says: Take that in the name of my lord, " << name << endl;
   }
 private:
 };
@@ -67,7 +67,7 @@ class Swordsman : public Warrior {
 public:
   Swordsman( const string& name, double str ) : Warrior( name, str ) {}
   void defend( const string& name ) const {
-    cout << "CLANG! " << Warrior::getName() << " says: Take that in the name of my lord, " << name << endl;
+    cout << "CLANG! " << getName() << " says: Take that in the name of my lord, " << name << endl;
   }
 private:
 };

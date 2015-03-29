@@ -1,3 +1,10 @@
+/*
+  rec08 / Separate Compilations
+  Jia Sen Wu / jw3675
+  CS1124
+  Polytechnic University
+*/
+
 #include "Registrar.h"
 #include <iostream>
 using namespace BrooklynPoly;

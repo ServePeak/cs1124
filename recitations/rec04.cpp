@@ -1,8 +1,8 @@
 /*
-	rec04 - pointers
-	Jia Sen Wu / jw3675
-	CS1124
-	Polytechnic University
+  rec04 - pointers
+  Jia Sen Wu / jw3675
+  CS1124
+  Polytechnic University
 */
 
 #include <fstream>

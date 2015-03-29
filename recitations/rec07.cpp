@@ -1,5 +1,5 @@
 /*
-  hw07 / Association and Delegation
+  rec07 / More Inheritance
   Jia Sen Wu / jw3675
   CS1124
   Polytechnic University

@@ -1,3 +1,10 @@
+/*
+  rec06 / Inheritance
+  Jia Sen Wu / jw3675
+  CS1124
+  Polytechnic University
+*/
+
 #include <iostream>
 #include <vector>
 using namespace std;

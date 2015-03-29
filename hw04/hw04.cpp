@@ -1,8 +1,8 @@
 /*
-	hw04 / Dynamic Memory
-	Jia Sen Wu / jw3675
-	CS1124
-	Polytechnic University
+  hw04 / Dynamic Memory
+  Jia Sen Wu / jw3675
+  CS1124
+  Polytechnic University
 */
 
 #include <fstream>

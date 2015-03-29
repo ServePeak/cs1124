@@ -1,8 +1,8 @@
 /*
-	hw01 / Warrior Battle Simulator
-	Jia Sen Wu / jw3675
-	CS1124
-	Polytechnic University
+  hw01 / Warrior Battle Simulator
+  Jia Sen Wu / jw3675
+  CS1124
+  Polytechnic University
 */
 
 #include <fstream>

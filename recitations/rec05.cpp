@@ -1,8 +1,8 @@
 /*
-	rec05 - Association and Delegation
-	Jia Sen Wu / jw3675
-	CS1124
-	Polytechnic University
+  rec05 - Association and Delegation
+  Jia Sen Wu / jw3675
+  CS1124
+  Polytechnic University
 */
 
 #include <fstream>

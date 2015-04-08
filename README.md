@@ -12,3 +12,5 @@ hw03 - Completed March 1, 2015
 hw04 - Completed March 5, 2015
 
 hw05 - Completed March 11, 2015
+
+hw06 - Completed April 8, 2015

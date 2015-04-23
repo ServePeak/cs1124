@@ -1,3 +1,10 @@
+/*
+  rec10 / Linked List Splicing and Matching
+  Jia Sen Wu / jw3675
+  CS1124
+  Polytechnic University
+*/
+
 #include <cstdlib> // To allow NULL if no other includes
 #include <iostream>
 using namespace std;
@@ -59,7 +66,7 @@ Node* findMatch( Node* listPtr, Node* matchPtr ) {
 	matchPtr = matchPtr->link;
       }
     } else if( foundPtr != NULL && listPtr->data != matchPtr->data ) { // When already looping through match but data doesn't match anymore
-      listPtr = foundPtr->link; // IMPORTANT!! Go back to match pointer, then go to next;
+      listPtr = foundPtr->link; // IMPORTANT!! Go back to original match pointer, then go to next
       matchPtr = origPtr; // Reset match to origin
       foundPtr = NULL; // Start the loop again
     } else {
